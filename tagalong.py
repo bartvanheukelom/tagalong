@@ -100,15 +100,17 @@ def autosort(sql: sqlite3.Connection):
     print("AUTOSORT")
     c = sql.cursor()
 
-    c.execute('DELETE FROM document')
-    c.execute('DELETE FROM document_file')
+    #c.execute('DELETE FROM document')
+    #c.execute('DELETE FROM document_file')
 
     c.execute(
             "SELECT hash, path "
             "FROM fileinfo "
             "WHERE hash NOT IN (SELECT file_hash FROM document_file) "
     )
-    for hsah, path in c.fetchall():
+    res = c.fetchall()
+    print(f"{len(res)} orphaned files found")
+    for hsah, path in res:
         print(hsah, path)
         if pattern_dated_dir.match(path):
             sp = path.split('/')
